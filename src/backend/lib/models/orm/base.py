@@ -23,8 +23,12 @@ class Base(sa_orm.DeclarativeBase):
     __mapper_args__ = {"eager_defaults": True}  # noqa: RUF012
     __table_args__ = {"schema": "content"}  # noqa: RUF012
 
-    def as_dict(self) -> dict[str, typing.Any]:
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+    def as_dict(self, exclude_none: bool = False) -> dict[str, typing.Any]:  # noqa: FBT001, FBT002
+        return {
+            c.name: getattr(self, c.name)
+            for c in self.__table__.columns
+            if not exclude_none or getattr(self, c.name) is not None
+        }
 
 
 class IdCreatedUpdatedBaseMixin:

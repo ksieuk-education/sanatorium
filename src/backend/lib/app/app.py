@@ -7,6 +7,7 @@ import typing
 
 import fastapi
 import pydantic
+import sqladmin
 import uvicorn
 
 import lib.api.v1.handlers as _api_v1_handlers
@@ -14,6 +15,9 @@ import lib.app.errors as _app_errors
 import lib.app.settings as _app_settings
 import lib.app.split_settings as _app_split_settings
 import lib.clients as _clients
+import lib.models.admin_views as _models_admin_views
+import lib.user.repositories as _user_repositories
+import lib.user.services as _user_services
 
 logger = logging.getLogger(__name__)
 
@@ -78,15 +82,20 @@ class Application:
         # Repositories
         logger.info("Initializing repositories")
 
+        user_repository = _user_repositories.UserRepository(async_session=database_client.get_async_session())
+
         # Caches
         logger.info("Initializing caches")
 
         # Services
         logger.info("Initializing services")
 
+        user_service = _user_services.UserService(user_repository=user_repository)
+
         # Handlers
         logger.info("Initializing handlers")
         liveness_probe_handler = _api_v1_handlers.health_router
+        user_handler = _api_v1_handlers.UserHandler(user_service=user_service)
 
         logger.info("Creating application")
 
@@ -98,8 +107,22 @@ class Application:
             default_response_class=fastapi.responses.ORJSONResponse,
         )
 
+        # Admin
+        fastapi_admin = sqladmin.Admin(fastapi_app, database_client.async_engine)
+
+        fastapi_admin.add_view(_models_admin_views.UserView)
+        fastapi_admin.add_view(_models_admin_views.AdminView)
+        fastapi_admin.add_view(_models_admin_views.RegistrationView)
+        fastapi_admin.add_view(_models_admin_views.TravelPackageView)
+        fastapi_admin.add_view(_models_admin_views.RoomView)
+        fastapi_admin.add_view(_models_admin_views.DiningTableView)
+        fastapi_admin.add_view(_models_admin_views.RoomTypeView)
+        fastapi_admin.add_view(_models_admin_views.DiningTypeView)
+        fastapi_admin.add_view(_models_admin_views.PhysicianView)
+
         # Routes
-        fastapi_app.include_router(liveness_probe_handler, prefix="/spd_uploader/api/v1/health", tags=["health"])
+        fastapi_app.include_router(liveness_probe_handler, prefix="/api/v1/health", tags=["health"])
+        fastapi_app.include_router(user_handler.router, prefix="/api/v1/user", tags=["user"])
 
         fastapi_app.add_exception_handler(pydantic.ValidationError, _api_v1_handlers.value_error_exception_handler)
         fastapi_app.add_exception_handler(

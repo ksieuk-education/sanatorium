@@ -30,7 +30,7 @@ class Registration(_models_orm_base.Base, _models_orm_base.IdCreatedUpdatedBaseM
     def user(cls) -> sa_orm.Mapped["User"]:  # type: ignore[reportUndefinedVariable]  # noqa: F821
         return sa_orm.relationship(
             "User",
-            back_populates="registration",
+            back_populates="registrations",
             cascade="all, delete",
             passive_deletes=True,
             uselist=False,

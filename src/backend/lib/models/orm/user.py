@@ -21,7 +21,9 @@ class User(_models_orm_base.Base, _models_orm_base.IdCreatedUpdatedBaseMixin):
 
     @sa_orm.declared_attr
     @classmethod
-    def registrations(cls) -> sa_orm.Mapped["Registration"]:  # type: ignore[reportUndefinedVariable]  # noqa: F821
+    def registrations(  # type: ignore[reportUnknownParameterType]
+        cls,
+    ) -> sa_orm.Mapped[list["Registration"]]:  # type: ignore[reportUndefinedVariable]  # noqa: F821
         return sa_orm.relationship(
             "Registration",
             back_populates="user",
