@@ -1,5 +1,5 @@
 PENV = .venv
-NENV = ../node_modules
+NENV = ../../node_modules
 
 PYTHON = $(PENV)/bin/python
 PYRIGHT = $(NENV)/.bin/pyright
