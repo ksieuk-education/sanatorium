@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  spd_uploader_app:
+    build:
+      context: .
+    container_name: vitrina_app
+    image: vitrina_app
+    restart: always
+    entrypoint: ["/opt/app/entrypoint.sh"]
+    env_file:
+      - .env
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    networks:
+      - api_network
+
+networks:
+  api_network:
+    driver: bridge
