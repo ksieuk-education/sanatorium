@@ -1,11 +1,11 @@
 version: "3"
 
 services:
-  spd_uploader_app:
+  sanatorium_app:
     build:
       context: .
-    container_name: accent_app
-    image: accent_app
+    container_name: sanatorium_app
+    image: sanatorium_app
     restart: always
     entrypoint: ["/opt/app/entrypoint.sh"]
     env_file:
@@ -22,7 +22,7 @@ services:
     env_file:
       - .env
     depends_on:
-      - spd_uploader_app
+      - sanatorium_app
     networks:
       - api_network
 
