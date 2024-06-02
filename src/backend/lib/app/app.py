@@ -7,6 +7,7 @@ import typing
 
 import fastapi
 import pydantic
+import sqladmin
 import uvicorn
 
 import lib.api.v1.handlers as _api_v1_handlers
@@ -14,6 +15,7 @@ import lib.app.errors as _app_errors
 import lib.app.settings as _app_settings
 import lib.app.split_settings as _app_split_settings
 import lib.clients as _clients
+import lib.models.admin_views as _models_admin_views
 import lib.user.repositories as _user_repositories
 import lib.user.services as _user_services
 
@@ -104,6 +106,19 @@ class Application:
             openapi_url=settings.app.openapi_url,
             default_response_class=fastapi.responses.ORJSONResponse,
         )
+
+        # Admin
+        fastapi_admin = sqladmin.Admin(fastapi_app, database_client.async_engine)
+
+        fastapi_admin.add_view(_models_admin_views.UserView)
+        fastapi_admin.add_view(_models_admin_views.AdminView)
+        fastapi_admin.add_view(_models_admin_views.RegistrationView)
+        fastapi_admin.add_view(_models_admin_views.TravelPackageView)
+        fastapi_admin.add_view(_models_admin_views.RoomView)
+        fastapi_admin.add_view(_models_admin_views.DiningTableView)
+        fastapi_admin.add_view(_models_admin_views.RoomTypeView)
+        fastapi_admin.add_view(_models_admin_views.DiningTypeView)
+        fastapi_admin.add_view(_models_admin_views.PhysicianView)
 
         # Routes
         fastapi_app.include_router(liveness_probe_handler, prefix="/api/v1/health", tags=["health"])
