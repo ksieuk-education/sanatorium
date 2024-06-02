@@ -20,6 +20,7 @@ readme = "README.md"
 version = "0.1.0"
 
 [tool.poetry.dependencies]
+alembic = "^1.13.1"
 asyncpg = "^0.29.0"
 fastapi = "^0.111.0"
 pydantic = "^2.7.1"
