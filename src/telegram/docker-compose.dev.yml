@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  s_cache:
+    image: redis:7.2.4-alpine
+    container_name: "s_cache"
+    restart: always
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    volumes:
+      - cache:/data
+    command: redis-server --save 20 1 --loglevel debug --requirepass "${REDIS_PASSWORD}"
+
+volumes:
+  cache:
+    driver: local

@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  s_telegram:
+    build:
+      context: .
+    container_name: "s_telegram"
+    restart: always
+    env_file:
+      - .env
+    entrypoint:
+      - "/opt/app/entrypoint.sh"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - cache
+
+  s_cache:
+    image: redis:7.2.4-alpine
+    container_name: "s_cache"
+    restart: always
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    volumes:
+      - cache:/data
+    command: redis-server --save 20 1 --loglevel notice --requirepass "${REDIS_PASSWORD}"
+
+volumes:
+  cache:
+    driver: local
