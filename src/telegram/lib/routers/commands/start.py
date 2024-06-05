@@ -30,7 +30,7 @@ class StartRouter:
     ):
         await state.clear()
 
-        response_text = aiogram_utils_formatting.Text("Привет! Первое сообщение")
+        response_text = aiogram_utils_formatting.Text("Привет! Ты можешь получить путевку в наш санаторий")
         await message.answer(
             **response_text.as_kwargs(),
             reply_markup=structures_keyboards.get_kb_user_registration(),

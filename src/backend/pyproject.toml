@@ -30,6 +30,7 @@ pyyaml = "^6.0.1"
 sqladmin = "^0.17.0"
 sqlalchemy = "^2.0.29"
 uvicorn = "^0.29.0"
+greenlet = "^3.0.3"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.7.0"

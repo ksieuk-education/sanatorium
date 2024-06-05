@@ -12,3 +12,6 @@ class Physician(_models_orm_base.Base, _models_orm_base.IdCreatedUpdatedBaseMixi
 
     full_name: sa_orm.Mapped[str] = sa_orm.mapped_column(sa.String(255), nullable=False)
     specialization: sa_orm.Mapped[str] = sa_orm.mapped_column(sa.String(255), nullable=False)
+
+    def __repr__(self):
+        return self.full_name

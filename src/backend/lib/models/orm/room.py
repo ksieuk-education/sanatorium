@@ -25,6 +25,9 @@ class Room(_models_orm_base.Base, _models_orm_base.IdCreatedUpdatedBaseMixin):
             uselist=False,
         )
 
+    def __repr__(self):
+        return f"№{self.room_number}, {self.capacity} места"
+
 
 class RoomType(_models_orm_base.Base, _models_orm_base.IdCreatedUpdatedBaseMixin):
     """Модель для описания полей в таблице RoomType"""
@@ -38,3 +41,6 @@ class RoomType(_models_orm_base.Base, _models_orm_base.IdCreatedUpdatedBaseMixin
 
     name: sa_orm.Mapped[str] = sa_orm.mapped_column(sa.String(255), nullable=False)
     description: sa_orm.Mapped[str] = sa_orm.mapped_column(sa.String(255), nullable=False)
+
+    def __repr__(self):
+        return self.name

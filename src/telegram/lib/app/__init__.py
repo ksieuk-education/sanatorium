@@ -8,4 +8,5 @@ __all__ = [
     "ClientError",
     "DisposeError",
     "StartServerError",
+    "Settings",
 ]

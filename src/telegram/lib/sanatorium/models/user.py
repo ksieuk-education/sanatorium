@@ -4,6 +4,8 @@ import datetime
 import typing
 import uuid
 
+import aiogram.utils.formatting as aiogram_utils_formatting
+
 import pydantic
 
 
@@ -16,6 +18,24 @@ class UserInfoModel(pydantic.BaseModel):
     passport_number: int
     medical_policy: int
     birth_date: datetime.date
+
+    def get_info_text_formatted(self):
+        fields = {
+            "Имя": self.first_name,
+            "Фамилия": self.last_name,
+            "Серия паспорта": self.passport_series,
+            "Номер паспорта": self.passport_number,
+            "Медицинский полис": self.medical_policy,
+            "Дата рождения": self.birth_date.strftime("%d-%m-%Y"),
+        }
+
+        return aiogram_utils_formatting.as_list(
+            *(
+                aiogram_utils_formatting.as_key_value(field_name, field_value)
+                for field_name, field_value in fields.items()
+            ),
+            sep="\n",
+        )
 
 
 class UserFullModel(UserInfoModel):

@@ -55,6 +55,16 @@ class UserCreateRouter:
             aiogram.F.text.as_("medical_policy"),
             aiogram_filters.StateFilter(structures_fsm.UserStates.get_medical_policy),
         )
+        self.router.message.register(
+            self.on_confirmation,
+            aiogram.F.text.as_("birth_date"),
+            aiogram_filters.StateFilter(structures_fsm.UserStates.get_birth_date),
+        )
+        self.router.message.register(
+            self.create_user_final,
+            aiogram.F.text.lower() == "подтвердить",
+            aiogram_filters.StateFilter(structures_fsm.UserStates.confirmation),
+        )
 
     async def on_get_first_name(
         self,
@@ -167,3 +177,34 @@ class UserCreateRouter:
         )
 
         await state.set_state(structures_fsm.UserStates.confirmation)
+
+    async def create_user_final(
+        self,
+        message: aiogram.types.Message,
+        state: aiogram_fsm_context.FSMContext,
+    ):
+        if message.from_user is None:
+            raise ValueError("User is None")
+
+        user_data = await state.get_data()
+        request = _sanatorium_models.UserInfoModel.model_validate(user_data)
+
+        response_text = "Отлично! Создаю аккаунт..."
+
+        await message.answer(
+            text=response_text,
+            reply_markup=structures_keyboards.create_kb_media(),
+        )
+        response = await self._user_service.create(request)
+
+        response_text = aiogram_utils_formatting.Text(
+            "Пользователь успешно создан!\n\n",
+            response.get_info_text_formatted(),
+        )
+
+        await message.answer(
+            **response_text.as_kwargs(),
+            reply_markup=structures_keyboards.create_kb_media(),
+        )
+
+        await routers_utils.send_start_message(message, state)

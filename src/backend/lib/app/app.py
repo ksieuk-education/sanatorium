@@ -122,7 +122,7 @@ class Application:
 
         # Routes
         fastapi_app.include_router(liveness_probe_handler, prefix="/api/v1/health", tags=["health"])
-        fastapi_app.include_router(user_handler.router, prefix="/api/v1/user", tags=["user"])
+        fastapi_app.include_router(user_handler.router, prefix="/api/v1/users", tags=["user"])
 
         fastapi_app.add_exception_handler(pydantic.ValidationError, _api_v1_handlers.value_error_exception_handler)
         fastapi_app.add_exception_handler(
