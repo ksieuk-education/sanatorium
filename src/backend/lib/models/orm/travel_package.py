@@ -43,3 +43,6 @@ class TravelPackage(_models_orm_base.Base, _models_orm_base.IdCreatedUpdatedBase
             passive_deletes=True,
             uselist=False,
         )
+
+    def __repr__(self):
+        return self.name

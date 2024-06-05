@@ -21,7 +21,6 @@ depends_on: str | Sequence[str] | None = None
 def upgrade() -> None:
     """Миграция на обновление"""
 
-    op.execute("create schema if not exists content")
     op.create_table(
         "admin",
         sa.Column("username", sa.String(length=255), nullable=False),
@@ -80,7 +79,7 @@ def upgrade() -> None:
         sa.Column("last_name", sa.String(length=255), nullable=False),
         sa.Column("passport_series", sa.Integer(), nullable=False),
         sa.Column("passport_number", sa.Integer(), nullable=False),
-        sa.Column("medical_policy", sa.Integer(), nullable=False),
+        sa.Column("medical_policy", sa.BIGINT(), nullable=False),
         sa.Column("birth_date", sa.Date(), nullable=False),
         sa.Column("id", sa.Uuid(), nullable=False),
         sa.Column("created_at", sa.DateTime(), server_default=sa.text("now()"), nullable=False),
@@ -173,4 +172,3 @@ def downgrade() -> None:
     op.drop_table("dining_type", schema="content")
     op.drop_table("dining_table", schema="content")
     op.drop_table("admin", schema="content")
-    op.execute("drop schema content")

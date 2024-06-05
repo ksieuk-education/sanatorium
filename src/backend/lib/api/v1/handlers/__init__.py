@@ -2,7 +2,7 @@
 
 from .errors import *
 from .health import router as health_router
-from .user import *
+from .users import *
 
 __all__ = [
     "UserHandler",

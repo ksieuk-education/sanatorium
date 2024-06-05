@@ -20,6 +20,9 @@ class DiningTable(_models_orm_base.Base, _models_orm_base.IdCreatedUpdatedBaseMi
     table_number: sa_orm.Mapped[int] = sa_orm.mapped_column(sa.Integer, nullable=False, unique=True)
     capacity: sa_orm.Mapped[int] = sa_orm.mapped_column(sa.Integer, nullable=False)
 
+    def __repr__(self):
+        return f"№{self.table_number}, {self.capacity} места"
+
 
 class DiningType(_models_orm_base.Base, _models_orm_base.IdCreatedUpdatedBaseMixin):
     """Модель для описания полей в таблице DiningType"""
@@ -33,3 +36,6 @@ class DiningType(_models_orm_base.Base, _models_orm_base.IdCreatedUpdatedBaseMix
 
     name: sa_orm.Mapped[str] = sa_orm.mapped_column(sa.String(255), nullable=False)
     description: sa_orm.Mapped[str] = sa_orm.mapped_column(sa.String(255), nullable=False)
+
+    def __repr__(self):
+        return self.name
